@@ -31,6 +31,7 @@ Token = 'XTuPxqfWBGOmcsWJFcfFhDxqITHYTGOJ'
 #Academy 2 NE, SD Airport station
 station_id = 'GHCND:USC00390043'
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 
@@ -143,6 +144,13 @@ plt.axis('tight')
 
 #Plot warming stripes.
 plt.bar(x_lbls, y_vals, color = my_cmap(norm(temps_normed)), width=1.0, bottom=-100, edgecolor = "none")
+
+# Create a mappable colorbar
+norm = mpl.colors.Normalize(vmin=-2.7,vmax=2.7)
+sm = plt.cm.ScalarMappable(cmap=my_cmap, norm=norm)
+sm.set_array([])
+cbar = plt.colorbar(sm, ticks=np.linspace(-2.6,2.6,9))
+cbar.set_label('Standard Deviation', labelpad=-40, y=1.05, rotation=0)
 
 #Plot temperature timeseries. Comment out to only plot stripes
 plt.plot(x_lbls,df_temp_freq.avgTemp,'k.-',ms=10.)
