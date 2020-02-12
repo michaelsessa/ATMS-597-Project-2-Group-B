@@ -166,6 +166,7 @@ elif freq == 'weekly':
 
 plt.xticks(x_ticks, x_ticks_lbs)
 plt.ylim(min(df_temp_freq.avgTemp)-5, max(df_temp_freq.avgTemp)+5)
+plt.ylabel('Temperature (F)')
 plt.show()
 
 plt.tight_layout()
