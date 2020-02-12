@@ -131,6 +131,9 @@ df_temp_freq
 temps_normed = df_temp_freq.Normalized.values
 temps_normed
 
+# a flag whether to plot the data over the stripes
+timeseries = input("Do you want to plot a time series of the temperature data over the stripes? (YES/NO)")
+
 elements = len(df_temp_freq)
 
 x_lbls = np.arange(elements)
@@ -153,8 +156,11 @@ sm.set_array([])
 cbar = plt.colorbar(sm, ticks=np.linspace(-2.6, 2.6, 9))
 cbar.set_label('Standard Deviation', labelpad=-40, y=1.05, rotation=0)
 
-# Plot temperature timeseries. Comment out to only plot stripes
-plt.plot(x_lbls, df_temp_freq.avgTemp, 'k.-', ms=10.)
+# Plot temperature timeseries.
+if timeseries == 'YES':
+    plt.plot(x_lbls, df_temp_freq.avgTemp, 'k.-', ms=10.)
+else:
+    plt.yticks([])
 
 # Setting for the xticks
 if freq == 'annual':
