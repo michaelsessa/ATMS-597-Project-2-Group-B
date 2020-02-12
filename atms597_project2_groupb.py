@@ -88,10 +88,6 @@ df_temp_avg['avgTemp'] = (df_temp_min['minTemp'] + df_temp_max['maxTemp'])/2
 df_temp_avg = df_temp_avg.dropna()  # Remove missing values
 df_temp_avg
 
-plt.figure(figsize=(30, 10))
-plt.plot(df_temp_avg.date, df_temp_avg.avgTemp, '.')
-plt.show()
-
 df_temp_avg = df_temp_avg.set_index(['date'])
 df_temp_avg
 
