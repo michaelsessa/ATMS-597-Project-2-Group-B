@@ -146,19 +146,21 @@ plt.axis('tight')
 plt.bar(x_lbls, y_vals, color=my_cmap(norm(temps_normed)), width=1.0, bottom=-100, edgecolor="none")
 
 # Create a mappable colorbar
-norm = mpl.colors.Normalize(vmin=-2.7, vmax=2.7)
+norm = mpl.colors.Normalize(vmin=-2.6, vmax=2.6)
 sm = plt.cm.ScalarMappable(cmap=my_cmap, norm=norm)
 sm.set_array([])
 cbar = plt.colorbar(sm, ticks=np.linspace(-2.6, 2.6, 9))
-cbar.set_label('Standard Deviation', labelpad=-40, y=1.05, rotation=0)
+cbar.set_label('Standard Deviation', labelpad=-40, y=1.07, rotation=0)
 
 # Plot temperature timeseries.
-if timeseries == 'YES':
+if timeseries[0].upper() == 'Y':
     plt.plot(x_lbls, df_temp_freq.avgTemp, 'k.-', ms=10.)
     plt.ylim(min(df_temp_freq.avgTemp)-5, max(df_temp_freq.avgTemp)+5)
     plt.ylabel('Temperature (F)')
-else:
+elif timeseries[0].upper() == 'N':
     plt.yticks([])
+else:
+    print('Please specify whether you want to plot the data over the stripes.')
 
 # Setting for the xticks
 if freq == 'annual':
