@@ -54,7 +54,11 @@ for year in range(start_year, end_year):
     print('working on year '+year)
 
     # make the api call
-    r = requests.get('https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&datatypeid=TMIN&datatypeid=TMAX&limit=1000&stationid='+station_id+'&startdate='+year+'-01-01&enddate='+year+'-12-31', headers={'token': Token})
+    r = requests.get("https://www.ncdc.noaa.gov/cdo-web/api/v2/" +
+                     "data?datasetid=GHCND&datatypeid=TMIN&datatypeid" +
+                     "=TMAX&limit=1000&stationid=" + station_id +
+                     "&startdate=" + year + "-01-01&enddate=" +
+                     year + "-12-31", headers={'token': Token})
     # load the api response as a json
     # print(r.text)
     d = json.loads(r.text)
@@ -76,23 +80,32 @@ df_temp_max = pd.DataFrame()
 df_temp_avg = pd.DataFrame()
 
 # populate date and temperature fields (convert string date to datetime)
-df_temp_min['date'] = [datetime.strptime(d, "%Y-%m-%dT%H:%M:%S") for d in dates_mintemp]
-df_temp_min['minTemp'] = [float(v)/10.0 * 1.8 + 32 for v in min_temps]  # C to F
+df_temp_min['date'] = [datetime.strptime(d, "%Y-%m-%dT%H:%M:%S")
+                       for d in dates_mintemp]
+df_temp_min['minTemp'] = [float(v)/10.0 * 1.8 + 32
+                          for v in min_temps]  # C to F
 
-df_temp_max['date'] = [datetime.strptime(d, "%Y-%m-%dT%H:%M:%S") for d in dates_maxtemp]
-df_temp_max['maxTemp'] = [float(v)/10.0 * 1.8 + 32 for v in max_temps]  # C to F
+df_temp_max['date'] = [datetime.strptime(d, "%Y-%m-%dT%H:%M:%S")
+                       for d in dates_maxtemp]
+df_temp_max['maxTemp'] = [float(v)/10.0 * 1.8 + 32
+                          for v in max_temps]  # C to F
 
-df_temp_avg['date'] = [datetime.strptime(d, "%Y-%m-%dT%H:%M:%S") for d in dates_maxtemp]
+df_temp_avg['date'] = [datetime.strptime(d, "%Y-%m-%dT%H:%M:%S")
+                       for d in dates_maxtemp]
 df_temp_avg['avgTemp'] = (df_temp_min['minTemp'] + df_temp_max['maxTemp'])/2
 
 df_temp_avg = df_temp_avg.dropna()  # Remove missing values
-df_temp_avg
+# print(df_temp_avg)
+
+# plt.figure(figsize=(30, 10))
+# plt.plot(df_temp_avg.date, df_temp_avg.avgTemp, '.')
+# plt.show()
 
 df_temp_avg = df_temp_avg.set_index(['date'])
-df_temp_avg
+# print(df_temp_avg)
 
 ltm = df_temp_avg.avgTemp.mean()
-ltm
+# print(ltm)
 
 # ask users what frequency do they want
 freq = input("Enter annual, monthly, or weekly: ")
@@ -115,20 +128,22 @@ elif freq == 'weekly':
 else:
     print('Only support annual, monthly, or weekly.')
 
-df_temp_freq
+# print(df_temp_freq)
 
-df_temp_freq['Normalized'] = (df_temp_freq.avgTemp - ltm)/df_temp_freq.avgTemp.std()
+df_temp_freq['Normalized'] = ((df_temp_freq.avgTemp - ltm) /
+                              df_temp_freq.avgTemp.std())
 
 df_temp_freq.isnull().sum()  # Check if there are missing values
 
 df_temp_freq = df_temp_freq.dropna()  # Remove missing values
-df_temp_freq
+# print(df_temp_freq)
 
 temps_normed = df_temp_freq.Normalized.values
-temps_normed
+# print(temps_normed)
 
 # a flag whether to plot the data over the stripes
-timeseries = input("Do you want to plot a time series of the temperature data over the stripes? (YES/NO)")
+timeseries = input("Do you want to plot a time series of " +
+                   "the temperature data over the stripes? (YES/NO) ")
 
 elements = len(df_temp_freq)
 
@@ -143,7 +158,8 @@ fig = plt.figure(figsize=(fig_wide, 5))
 plt.axis('tight')
 
 # Plot warming stripes.
-plt.bar(x_lbls, y_vals, color=my_cmap(norm(temps_normed)), width=1.0, bottom=-100, edgecolor="none")
+plt.bar(x_lbls, y_vals, color=my_cmap(norm(temps_normed)),
+        width=1.0, bottom=-100, edgecolor="none")
 
 # Create a mappable colorbar
 norm = mpl.colors.Normalize(vmin=-2.6, vmax=2.6)
