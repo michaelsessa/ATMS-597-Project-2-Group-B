@@ -155,6 +155,8 @@ cbar.set_label('Standard Deviation', labelpad=-40, y=1.05, rotation=0)
 # Plot temperature timeseries.
 if timeseries == 'YES':
     plt.plot(x_lbls, df_temp_freq.avgTemp, 'k.-', ms=10.)
+    plt.ylim(min(df_temp_freq.avgTemp)-5, max(df_temp_freq.avgTemp)+5)
+    plt.ylabel('Temperature (F)')
 else:
     plt.yticks([])
 
@@ -167,8 +169,6 @@ elif freq == 'weekly':
     x_ticks = np.arange(elements, step=261)
 
 plt.xticks(x_ticks, x_ticks_lbs)
-plt.ylim(min(df_temp_freq.avgTemp)-5, max(df_temp_freq.avgTemp)+5)
-plt.ylabel('Temperature (F)')
 plt.show()
 
 plt.tight_layout()
